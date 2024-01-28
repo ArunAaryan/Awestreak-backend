@@ -11,26 +11,27 @@ datasource db {
 }
 model User {
   id          String   @id @unique @default(cuid())
-  name        String   
   image       String?
   date_joined DateTime @default(now()) @updatedAt
   Streak      Streak[]
+  name        String
 }
 
 model Streak {
   id         String   @id @unique @default(cuid())
-  user_id    User     @relation(fields: [userId], references: [id])
-  board_id   Board    @relation(fields: [boardId], references: [id])
   created_at DateTime @default(now()) @updatedAt
   updated_at DateTime @default(now()) @updatedAt
-  userId     String
-  boardId    String
+  user_id    User?    @relation(fields: [userId], references: [id])
+  board_id   Board?   @relation(fields: [boardId], references: [id])
+  userId     String?
+  boardId    String?
+  current_streak Int @default(0) 
 }
 
 model Board {
   id          String   @id @unique @default(cuid())
   name        String
-  descripiton String?
+  description String?
   created_at  DateTime @default(now())
   updated_at  DateTime @default(now())
   Streak      Streak[]
