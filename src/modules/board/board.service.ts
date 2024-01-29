@@ -18,9 +18,10 @@ export class BoardService {
 
   async getBoards(params?: { joinStreak?: boolean }) {
     const { joinStreak } = params;
-    const boards = await this.repository.boards({
+    let boards = await this.repository.boards({
       joinStreak,
     });
+
     return boards;
   }
 }

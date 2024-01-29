@@ -40,8 +40,8 @@ export class ApiController {
   }
 
   @Get(`boards`)
-  getBoards(@Query('joinStreak', ParseBoolPipe) joinStreak: boolean) {
-    const params = { joinStreak };
+  getBoards(@Query('joinStreak') joinStreak?: string) {
+    const params = { joinStreak: joinStreak === 'true' };
     return this.boardService.getBoards(params);
   }
 }

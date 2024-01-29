@@ -6,7 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 @Injectable()
 export class BoardRepository {
   constructor(private prisma: PrismaService) {}
-
   async board(
     boardWhereUniqueInput: Prisma.BoardWhereUniqueInput,
   ): Promise<Board | null> {
