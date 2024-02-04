@@ -31,12 +31,15 @@ export class ApiController {
   }
 
   @Post(`board`)
-  async createBoard(@Body() data: { name: string; description: string }) {
-    const { name, description } = data;
+  async createBoard(
+    @Body() data: { name: string; description: string; image?: string },
+  ) {
+    const { name, description, image } = data;
     console.log('here from api controller');
     return this.boardService.createBoard({
       name,
       description,
+      image,
     });
   }
 

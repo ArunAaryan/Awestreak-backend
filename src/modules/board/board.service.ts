@@ -7,11 +7,13 @@ export class BoardService {
   async createBoard(params: {
     name: Board[`name`];
     description: Board[`description`];
+    image?: Board[`image`];
   }) {
-    const { name, description } = params;
+    const { name, description, image } = params;
     const board = await this.repository.createBoard({
       name,
       description,
+      image,
     });
     return board;
   }
