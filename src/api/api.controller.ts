@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   ParseBoolPipe,
   Post,
   Query,
@@ -43,5 +44,10 @@ export class ApiController {
   getBoards(@Query('joinStreak') joinStreak?: string) {
     const params = { joinStreak: joinStreak === 'true' };
     return this.boardService.getBoards(params);
+  }
+
+  @Get(`board/:id`)
+  getBoard(@Param('id') id) {
+    return this.boardService.getBoard(id);
   }
 }

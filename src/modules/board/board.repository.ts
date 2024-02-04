@@ -11,6 +11,13 @@ export class BoardRepository {
   ): Promise<Board | null> {
     return this.prisma.board.findUnique({
       where: boardWhereUniqueInput,
+      include: {
+        Streak: {
+          include: {
+            User: true,
+          },
+        },
+      },
     });
   }
 

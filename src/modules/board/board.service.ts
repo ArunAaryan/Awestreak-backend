@@ -18,10 +18,16 @@ export class BoardService {
 
   async getBoards(params?: { joinStreak?: boolean }) {
     const { joinStreak } = params;
-    let boards = await this.repository.boards({
+    const boards = await this.repository.boards({
       joinStreak,
     });
-
     return boards;
   }
+
+  async getBoard(id: string) {
+    const board = await this.repository.board({ id });
+    return board;
+  }
+
+  //write board/:id route here
 }

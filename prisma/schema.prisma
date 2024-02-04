@@ -21,8 +21,8 @@ model Streak {
   id         String   @id @unique @default(cuid())
   created_at DateTime @default(now()) @updatedAt
   updated_at DateTime @default(now()) @updatedAt
-  user_id    User?    @relation(fields: [userId], references: [id])
-  board_id   Board?   @relation(fields: [boardId], references: [id])
+  User    User?    @relation(fields: [userId], references: [id])
+  Board   Board?   @relation(fields: [boardId], references: [id])
   userId     String?
   boardId    String?
   current_streak Int @default(0) 
