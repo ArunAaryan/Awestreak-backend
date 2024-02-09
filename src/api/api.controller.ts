@@ -6,7 +6,9 @@ import {
   ParseBoolPipe,
   Post,
   Query,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { BoardService } from 'src/modules/board/board.service';
 import { UserService } from 'src/modules/user/user.service';
 
@@ -30,7 +32,7 @@ export class ApiController {
     return this.userService.getUsers();
   }
 
-  @Post(`board`)
+  @Post(`boards`)
   async createBoard(
     @Body() data: { name: string; description: string; image?: string },
   ) {
@@ -48,8 +50,17 @@ export class ApiController {
     const params = { joinStreak: joinStreak === 'true' };
     return this.boardService.getBoards(params);
   }
+  @Get(`boards/my`)
+  getUserBoards(
+    @Query('joinStreak') joinStreak?: string,
+    @Req() req?: Request,
+  ) {
+    const userId = req.headers.authorization;
+    const params = { joinStreak: joinStreak === 'true', userId };
+    return this.boardService.getBoards(params);
+  }
 
-  @Get(`board/:id`)
+  @Get(`boards/:id`)
   getBoard(@Param('id') id) {
     return this.boardService.getBoard(id);
   }

@@ -28,8 +28,18 @@ export class BoardRepository {
     where?: Prisma.BoardWhereInput;
     orderBy?: Prisma.BoardOrderByWithRelationInput;
     joinStreak?: boolean;
+    userId?: string;
   }): Promise<Board[]> {
-    const { skip, take, cursor, where, orderBy, joinStreak } = params;
+    const {
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+      joinStreak,
+      userId: uid,
+    } = params;
+    console.log(uid, 'uid1');
     return this.prisma.board.findMany({
       skip,
       take,

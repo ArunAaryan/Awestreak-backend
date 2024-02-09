@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Board } from '@prisma/client';
+import { Board, Prisma } from '@prisma/client';
 import { BoardRepository } from './board.repository';
 @Injectable()
 export class BoardService {
@@ -18,10 +18,25 @@ export class BoardService {
     return board;
   }
 
-  async getBoards(params?: { joinStreak?: boolean }) {
-    const { joinStreak } = params;
+  async getBoards(params?: { joinStreak?: boolean; userId?: string }) {
+    const { joinStreak, userId } = params;
+    let where: Prisma.BoardWhereInput;
+    if (userId) {
+      where = {
+        Streak: {
+          some: {
+            userId: {
+              equals: userId,
+            },
+          },
+        },
+      };
+    }
+
     const boards = await this.repository.boards({
       joinStreak,
+      userId,
+      where,
     });
     return boards;
   }
