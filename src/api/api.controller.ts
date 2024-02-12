@@ -64,4 +64,11 @@ export class ApiController {
   getBoard(@Param('id') id) {
     return this.boardService.getBoard(id);
   }
+  @Post(`boards/:id/join`)
+  async joinBoard(@Param('id') id, @Req() req?: Request) {
+    const userId = req.headers.authorization;
+    const params = { userId: userId, boardId: id };
+    const streakRes = await this.boardService.joinBoard(params);
+    return await this.boardService.getBoard(id);
+  }
 }

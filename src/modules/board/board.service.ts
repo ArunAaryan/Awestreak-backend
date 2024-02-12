@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Board, Prisma } from '@prisma/client';
+import { Board, Streak, Prisma } from '@prisma/client';
 import { BoardRepository } from './board.repository';
+import { StreakRepository } from '../streak/streak.repository';
 @Injectable()
 export class BoardService {
-  constructor(private repository: BoardRepository) {}
+  constructor(
+    private repository: BoardRepository,
+    private streakRepository: StreakRepository,
+  ) {}
   async createBoard(params: {
     name: Board[`name`];
     description: Board[`description`];
@@ -44,6 +48,17 @@ export class BoardService {
   async getBoard(id: string) {
     const board = await this.repository.board({ id });
     return board;
+  }
+
+  async joinBoard(params: {
+    userId: Streak['userId'];
+    boardId: Streak['boardId'];
+    current_streak?: Streak['current_streak'];
+  }) {
+    // may be should be moved to streak service
+    const streak = await this.streakRepository.createStreak(params);
+    console.log(streak);
+    return streak;
   }
 
   //write board/:id route here
