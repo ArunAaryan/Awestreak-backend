@@ -12,12 +12,18 @@ export class BoardService {
     name: Board[`name`];
     description: Board[`description`];
     image?: Board[`image`];
+    userId: Board[`userId`];
   }) {
-    const { name, description, image } = params;
+    const { name, description, image, userId } = params;
     const board = await this.repository.createBoard({
       name,
       description,
       image,
+      User: {
+        connect: {
+          id: userId,
+        },
+      },
     });
     return board;
   }
@@ -47,6 +53,32 @@ export class BoardService {
 
   async getBoard(id: string) {
     const board = await this.repository.board({ id });
+    return board;
+  }
+
+  async updateBoard(params: {
+    id: Board[`id`];
+    name: Board[`name`];
+    description: Board[`description`];
+    image?: Board[`image`];
+    userId: Board[`userId`];
+  }) {
+    const { name, description, image, userId, id } = params;
+    const board = await this.repository.updateBoard({
+      data: {
+        name,
+        description,
+        image,
+        User: {
+          connect: {
+            id: userId,
+          },
+        },
+      },
+      where: {
+        id: id,
+      },
+    });
     return board;
   }
 

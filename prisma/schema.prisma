@@ -15,6 +15,7 @@ model User {
   date_joined DateTime @default(now()) @updatedAt
   Streak      Streak[]
   name        String
+  Board       Board[]
 }
 
 model Streak {
@@ -36,4 +37,6 @@ model Board {
   updated_at  DateTime @default(now())
   Streak      Streak[]
   image       String?
+  User        User?    @relation(fields: [userId], references: [id])
+  userId      String?
 }

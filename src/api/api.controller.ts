@@ -6,6 +6,7 @@ import {
   Param,
   ParseBoolPipe,
   Post,
+  Put,
   Query,
   Req,
 } from '@nestjs/common';
@@ -36,13 +37,16 @@ export class ApiController {
   @Post(`boards`)
   async createBoard(
     @Body() data: { name: string; description: string; image?: string },
+    @Req() req?: Request,
   ) {
+    const userId = req.headers.authorization;
     const { name, description, image } = data;
     console.log('here from api controller');
     return this.boardService.createBoard({
       name,
       description,
       image,
+      userId,
     });
   }
 
@@ -72,6 +76,23 @@ export class ApiController {
     const params = { userId: userId, boardId: id };
     const streakRes = await this.boardService.joinBoard(params);
     return await this.boardService.getBoard(id);
+  }
+  @Put(`boards/:id`)
+  async updateBoard(
+    @Body()
+    data: { name: string; description: string; image?: string },
+    @Param('id') id,
+    @Req() req?: Request,
+  ) {
+    const userId = req.headers.authorization;
+    const { name, description, image } = data;
+    return this.boardService.updateBoard({
+      id,
+      name,
+      description,
+      image,
+      userId,
+    });
   }
 
   @Delete(`boards/:id/join`)
