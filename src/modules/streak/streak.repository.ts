@@ -50,9 +50,13 @@ export class StreakRepository {
     });
   }
 
-  async deleteStreak(where: Prisma.StreakWhereUniqueInput): Promise<Streak> {
-    return this.prisma.streak.delete({
-      where,
+  async deleteStreak(userId: string, boardId: string): Promise<number> {
+    const res = await this.prisma.streak.deleteMany({
+      where: {
+        userId: userId,
+        boardId: boardId,
+      },
     });
+    return res.count;
   }
 }

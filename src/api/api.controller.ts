@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseBoolPipe,
@@ -50,6 +51,7 @@ export class ApiController {
     const params = { joinStreak: joinStreak === 'true' };
     return this.boardService.getBoards(params);
   }
+
   @Get(`boards/my`)
   getUserBoards(
     @Query('joinStreak') joinStreak?: string,
@@ -69,6 +71,14 @@ export class ApiController {
     const userId = req.headers.authorization;
     const params = { userId: userId, boardId: id };
     const streakRes = await this.boardService.joinBoard(params);
+    return await this.boardService.getBoard(id);
+  }
+
+  @Delete(`boards/:id/join`)
+  async leaveBoard(@Param('id') id, @Req() req?: Request) {
+    const userId = req.headers.authorization;
+    const streakRes = await this.boardService.leaveBoard(userId, id);
+    console.log('affected rows', streakRes);
     return await this.boardService.getBoard(id);
   }
 }

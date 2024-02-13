@@ -60,6 +60,9 @@ export class BoardService {
     console.log(streak);
     return streak;
   }
-
+  async leaveBoard(userId: string, boardId: string) {
+    const streak = await this.streakRepository.deleteStreak(userId, boardId);
+    return streak;
+  }
   //write board/:id route here
 }
