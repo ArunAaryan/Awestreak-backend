@@ -102,4 +102,11 @@ export class ApiController {
     console.log('affected rows', streakRes);
     return await this.boardService.getBoard(id);
   }
+
+  @Delete(`boards/:id`)
+  async deleteBoard(@Param('id') id, @Req() req?: Request) {
+    const userId = req.headers.authorization;
+    const deleteBoardRes = await this.boardService.deleteBoard(userId, id);
+    return deleteBoardRes;
+  }
 }

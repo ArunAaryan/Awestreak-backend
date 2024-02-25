@@ -43,6 +43,7 @@ export class BoardService {
       };
     }
 
+    console.log(joinStreak, userId, where, 'juw');
     const boards = await this.repository.boards({
       joinStreak,
       userId,
@@ -95,6 +96,13 @@ export class BoardService {
   async leaveBoard(userId: string, boardId: string) {
     const streak = await this.streakRepository.deleteStreak(userId, boardId);
     return streak;
+  }
+
+  async deleteBoard(userId: string, boardId: string) {
+    const where = { id: boardId };
+    // check if current user is the creator; then delete : TODO
+    const deleteBoard = await this.repository.deleteBoard(where);
+    return deleteBoard;
   }
   //write board/:id route here
 }
