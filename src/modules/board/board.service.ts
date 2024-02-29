@@ -104,5 +104,17 @@ export class BoardService {
     const deleteBoard = await this.repository.deleteBoard(where);
     return deleteBoard;
   }
+  async updateStreak(id) {
+    const data = await this.streakRepository.streak({ id });
+    console.log(data, data.current_streak, 'data in updateStreak');
+
+    let data_ = { ...data, current_streak: data.current_streak + 1 };
+    console.log(data_, data_.current_streak, 'data_');
+    const updatedBoard = await this.streakRepository.updateStreak({
+      where: { id },
+      data: data_,
+    });
+    return updatedBoard;
+  }
   //write board/:id route here
 }

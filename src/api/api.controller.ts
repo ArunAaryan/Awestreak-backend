@@ -109,4 +109,16 @@ export class ApiController {
     const deleteBoardRes = await this.boardService.deleteBoard(userId, id);
     return deleteBoardRes;
   }
+
+  @Post(`boards/:id/updateStreak`)
+  async udpateStreak(
+    @Param('id') id,
+    @Body() data: { streakId: string },
+    @Req() req?: Request,
+  ) {
+    const { streakId } = data;
+    const userId = req.headers.authorization;
+    const updateStreak = await this.boardService.updateStreak(streakId);
+    return updateStreak;
+  }
 }
