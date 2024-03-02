@@ -41,7 +41,6 @@ export class ApiController {
   ) {
     const userId = req.headers.authorization;
     const { name, description, image } = data;
-    console.log('here from api controller');
     return this.boardService.createBoard({
       name,
       description,
@@ -99,7 +98,6 @@ export class ApiController {
   async leaveBoard(@Param('id') id, @Req() req?: Request) {
     const userId = req.headers.authorization;
     const streakRes = await this.boardService.leaveBoard(userId, id);
-    console.log('affected rows', streakRes);
     return await this.boardService.getBoard(id);
   }
 

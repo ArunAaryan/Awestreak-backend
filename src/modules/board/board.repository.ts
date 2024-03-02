@@ -42,7 +42,6 @@ export class BoardRepository {
       joinStreak,
       userId: uid,
     } = params;
-    console.log(uid, 'uid1');
     return this.prisma.board.findMany({
       skip,
       take,
