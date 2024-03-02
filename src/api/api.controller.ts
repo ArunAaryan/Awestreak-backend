@@ -110,7 +110,7 @@ export class ApiController {
     return deleteBoardRes;
   }
 
-  @Post(`boards/:id/updateStreak`)
+  @Put(`boards/:id/updateStreak`)
   async udpateStreak(
     @Param('id') id,
     @Body() data: { streakId: string },
@@ -118,7 +118,7 @@ export class ApiController {
   ) {
     const { streakId } = data;
     const userId = req.headers.authorization;
-    const updateStreak = await this.boardService.updateStreak(streakId);
+    const updateStreak = await this.boardService.updateStreak(streakId, id);
     return updateStreak;
   }
 }
