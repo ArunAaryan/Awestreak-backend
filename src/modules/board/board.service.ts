@@ -43,7 +43,6 @@ export class BoardService {
       };
     }
 
-    console.log(joinStreak, userId, where, 'juw');
     const boards = await this.repository.boards({
       joinStreak,
       userId,
@@ -70,6 +69,7 @@ export class BoardService {
         name,
         description,
         image,
+        updated_at : new Date(),
         User: {
           connect: {
             id: userId,
@@ -90,7 +90,6 @@ export class BoardService {
   }) {
     // may be should be moved to streak service
     const streak = await this.streakRepository.createStreak(params);
-    console.log(streak);
     return streak;
   }
   async leaveBoard(userId: string, boardId: string) {
@@ -106,10 +105,8 @@ export class BoardService {
   }
   async updateStreak(id, boardId) {
     const data = await this.streakRepository.streak({ id });
-    console.log(data, data.current_streak, 'data in updateStreak');
 
-    let data_ = { ...data, current_streak: data.current_streak + 1 };
-    console.log(data_, data_.current_streak, 'data_');
+    let data_ = { ...data, current_streak: data.current_streak + 1, updated_at : new Date() };
     const updatedStreak = await this.streakRepository.updateStreak({
       where: { id },
       data: data_,
