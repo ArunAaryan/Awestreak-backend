@@ -13,6 +13,9 @@ export class BoardRepository {
       where: boardWhereUniqueInput,
       include: {
         Streak: {
+          orderBy:{
+            current_streak: 'desc',
+          },
           include: {
             User: true,
           },
