@@ -11,6 +11,7 @@ import {
   Req,
 } from '@nestjs/common';
 import { Request } from 'express';
+import { CreateBoardDto } from 'src/modules/board/board.dto';
 import { BoardService } from 'src/modules/board/board.service';
 import { UserService } from 'src/modules/user/user.service';
 
@@ -36,16 +37,14 @@ export class ApiController {
 
   @Post(`boards`)
   async createBoard(
-    @Body() data: { name: string; description: string; image?: string },
+    @Body() createBoardDto, 
     @Req() req?: Request,
   ) {
     const userId = req.headers.authorization;
-    const { name, description, image } = data;
     return this.boardService.createBoard({
-      name,
-      description,
-      image,
+      ...createBoardDto,
       userId,
+      frequency: parseInt(createBoardDto.frequency || 0),
     });
   }
 

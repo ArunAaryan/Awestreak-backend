@@ -2,28 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Board, Streak, Prisma } from '@prisma/client';
 import { BoardRepository } from './board.repository';
 import { StreakRepository } from '../streak/streak.repository';
+import { CreateBoardDto } from './board.dto';
 @Injectable()
 export class BoardService {
   constructor(
     private repository: BoardRepository,
     private streakRepository: StreakRepository,
   ) {}
-  async createBoard(params: {
-    name: Board[`name`];
-    description: Board[`description`];
-    image?: Board[`image`];
-    userId: Board[`userId`];
-  }) {
-    const { name, description, image, userId } = params;
+  async createBoard(createBoardDto: CreateBoardDto) {
     const board = await this.repository.createBoard({
-      name,
-      description,
-      image,
-      User: {
-        connect: {
-          id: userId,
-        },
-      },
+...createBoardDto,
+
     });
     return board;
   }
@@ -69,7 +58,7 @@ export class BoardService {
         name,
         description,
         image,
-        updated_at : new Date(),
+        updated_at: new Date(),
         User: {
           connect: {
             id: userId,
@@ -103,15 +92,19 @@ export class BoardService {
     const deleteBoard = await this.repository.deleteBoard(where);
     return deleteBoard;
   }
-  async updateStreak(id, boardId) {
+  async updateStreak(id, boardId: string) {
     const data = await this.streakRepository.streak({ id });
 
-    let data_ = { ...data, current_streak: data.current_streak + 1, updated_at : new Date() };
+    let data_ = {
+      ...data,
+      current_streak: data.current_streak + 1,
+      updated_at: new Date(),
+    };
     const updatedStreak = await this.streakRepository.updateStreak({
       where: { id },
       data: data_,
     });
-    const updatedBoard = await this.repository.board({ id : boardId });
+    const updatedBoard = await this.repository.board({ id: boardId });
     return updatedBoard;
   }
   //write board/:id route here
