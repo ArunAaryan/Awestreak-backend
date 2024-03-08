@@ -11,8 +11,7 @@ export class BoardService {
   ) {}
   async createBoard(createBoardDto: CreateBoardDto) {
     const board = await this.repository.createBoard({
-...createBoardDto,
-
+      ...createBoardDto,
     });
     return board;
   }

@@ -10,9 +10,12 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
+import { Log } from '@prisma/client';
 import { Request } from 'express';
 import { CreateBoardDto } from 'src/modules/board/board.dto';
 import { BoardService } from 'src/modules/board/board.service';
+import { CreateLogDto } from 'src/modules/log/log.dto';
+import { LogService } from 'src/modules/log/log.service';
 import { UserService } from 'src/modules/user/user.service';
 
 @Controller()
@@ -20,6 +23,7 @@ export class ApiController {
   constructor(
     private readonly userService: UserService,
     private readonly boardService: BoardService,
+    private readonly logService: LogService,
   ) {}
 
   @Post(`user`)
@@ -36,10 +40,7 @@ export class ApiController {
   }
 
   @Post(`boards`)
-  async createBoard(
-    @Body() createBoardDto, 
-    @Req() req?: Request,
-  ) {
+  async createBoard(@Body() createBoardDto, @Req() req?: Request) {
     const userId = req.headers.authorization;
     return this.boardService.createBoard({
       ...createBoardDto,
@@ -117,5 +118,10 @@ export class ApiController {
     const userId = req.headers.authorization;
     const updateStreak = await this.boardService.updateStreak(streakId, id);
     return updateStreak;
+  }
+
+  @Post(`boards/:id/addLog`)
+  async createLog(@Body() createLogDto: CreateLogDto): Promise<Log> {
+    return this.logService.createLog(createLogDto);
   }
 }

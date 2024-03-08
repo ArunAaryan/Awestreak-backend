@@ -27,6 +27,7 @@ model Streak {
   userId     String?
   boardId    String?
   current_streak Int @default(0) 
+  Log Log[]
 }
 
 enum Period {
@@ -46,4 +47,13 @@ model Board {
   userId      String?
   period      Period? 
   frequency   Int @default(0)
+}
+model Log {
+  id          String    @id @unique @default(cuid())
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
+  streakId    String?
+  streak      Streak?   @relation(fields: [streakId], references: [id])
+  description String?
+  image       String?
 }
