@@ -6,7 +6,7 @@ import { StreakRepository } from '../streak/streak.repository';
 
 @Module({
   imports: [PrismaModule],
-  providers: [BoardRepository, BoardService, StreakRepository,],
-  exports: [BoardService],
+  providers: [BoardRepository, BoardService, StreakRepository],
+  exports: [BoardService, BoardRepository],
 })
 export class BoardModule {}

@@ -10,12 +10,13 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { Log } from '@prisma/client';
+import { Board, Log } from '@prisma/client';
 import { Request } from 'express';
 import { CreateBoardDto } from 'src/modules/board/board.dto';
 import { BoardService } from 'src/modules/board/board.service';
 import { CreateLogDto } from 'src/modules/log/log.dto';
 import { LogService } from 'src/modules/log/log.service';
+import { StreakService } from 'src/modules/streak/streak.service';
 import { UserService } from 'src/modules/user/user.service';
 
 @Controller()
@@ -24,6 +25,7 @@ export class ApiController {
     private readonly userService: UserService,
     private readonly boardService: BoardService,
     private readonly logService: LogService,
+    private readonly streakService: StreakService,
   ) {}
 
   @Post(`user`)
@@ -120,8 +122,18 @@ export class ApiController {
     return updateStreak;
   }
 
-  @Post(`boards/:id/addLog`)
-  async createLog(@Body() createLogDto: CreateLogDto): Promise<Log> {
-    return this.logService.createLog(createLogDto);
+  @Post(`boards/:id/logs`)
+  async createLog(
+    @Param('id') boardId,
+    @Body() createLogDto: CreateLogDto,
+  ): Promise<Board> {
+    return this.logService.createLog(boardId, createLogDto);
+  }
+
+  @Post(`logs/updateStreak`)
+  async updateSteakJob(
+    @Body() data: { type: 'MONTHLY' | ' WEEKLY' | 'EVERYDAY' },
+  ): Promise<string> {
+    return this.streakService.updateStreakJob(data);
   }
 }

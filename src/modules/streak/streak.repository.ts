@@ -13,7 +13,9 @@ export class StreakRepository {
       where: streakWhereUniqueInput,
     });
   }
-
+  // type FactionWithOwner = Prisma.FactionGetPayload<{
+  //   include: { owner: true }
+  // }>
   async streaks(params: {
     skip?: number;
     take?: number;
@@ -26,7 +28,6 @@ export class StreakRepository {
       skip,
       take,
       cursor,
-      where,
       orderBy,
     });
   }
@@ -58,5 +59,29 @@ export class StreakRepository {
       },
     });
     return res.count;
+  }
+  async streaksWithLogs(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.StreakWhereUniqueInput;
+    where?: Prisma.StreakWhereInput;
+    orderBy?: Prisma.StreakOrderByWithRelationInput;
+  }): Promise<Prisma.StreakGetPayload<{ include: { Log: true } }>[]> {
+    const { skip, take, cursor, where, orderBy } = params;
+    // write a new function to find many instead of using the existing one
+    return this.prisma.streak.findMany({
+      skip,
+      take,
+      cursor,
+      orderBy,
+      include: {
+        Log: {
+          take: 1,
+          orderBy: {
+            created_at: 'desc',
+          },
+        },
+      },
+    });
   }
 }
