@@ -28,6 +28,7 @@ model Streak {
   boardId    String?
   current_streak Int @default(0) 
   Log Log[]
+  freezes    Int @default(0)
 }
 
 enum Period {
