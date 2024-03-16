@@ -12,7 +12,36 @@ export class StreakService {
     private prisma: PrismaService,
   ) {}
 
-  async updateStreakJob(data: { type: 'MONTHLY' | ' WEEKLY' | 'EVERYDAY' }) {
+  async weekOrMonthUpdate(type: 'WEEKLY' | 'MONTHLY') {
+    const boardsWithStreak = await this.boardRepository.boards({
+      where: {
+        period: {
+          equals: type,
+        },
+      },
+      joinStreak: true,
+    });
+    console.log('boardsWithStreak', boardsWithStreak.length);
+    for (let i = 0; i < boardsWithStreak.length; i++) {
+      await this.prisma.$transaction(async (prisma) => {
+        const { Streak, frequency } = boardsWithStreak[i];
+        // first streak , may be change streak to be one to one
+        console.log('Streak', Streak?.length, frequency);
+        if (Streak?.length > 0) {
+          Streak.map(async (streak) => {
+            streak.freezes = type === 'WEEKLY' ? 7 - frequency : 30 - frequency;
+            // change freeze logic for each month and also week
+            const streakRes = await this.prisma.streak.update({
+              where: { id: streak.id },
+              data: streak,
+            });
+            console.log(streakRes);
+          });
+        }
+      });
+    }
+  }
+  async updateStreakJob(data: { type: 'MONTHLY' | 'WEEKLY' | 'EVERYDAY' }) {
     const { type } = data;
     switch (type) {
       case 'EVERYDAY':
@@ -25,7 +54,7 @@ export class StreakService {
             },
           },
         });
-        // const streaks = await this.repository.streaksWithLogs({});
+        // const streaks = await this.repository.streakaWithLogs({});
         await this.prisma.$transaction(async (prisma) => {
           for (let i = 0; i < streaks.length; i++) {
             let streak = streaks[i];
@@ -64,7 +93,15 @@ export class StreakService {
             console.log(streakRes, 'streakRes');
           }
         });
-    }
-    return 'done';
+        break;
+      case 'WEEKLY':
+        this.weekOrMonthUpdate('WEEKLY');
+        break;
+      case 'MONTHLY':
+        this.weekOrMonthUpdate('MONTHLY');
+        break;
+    } //switch
+
+    return 'Done';
   }
 }

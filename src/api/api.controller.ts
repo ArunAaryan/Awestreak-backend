@@ -132,7 +132,7 @@ export class ApiController {
 
   @Post(`logs/updateStreak`)
   async updateSteakJob(
-    @Body() data: { type: 'MONTHLY' | ' WEEKLY' | 'EVERYDAY' },
+    @Body() data: { type: 'MONTHLY' | 'WEEKLY' | 'EVERYDAY' },
   ): Promise<string> {
     return this.streakService.updateStreakJob(data);
   }

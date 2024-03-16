@@ -13,9 +13,7 @@ export class StreakRepository {
       where: streakWhereUniqueInput,
     });
   }
-  // type FactionWithOwner = Prisma.FactionGetPayload<{
-  //   include: { owner: true }
-  // }>
+
   async streaks(params: {
     skip?: number;
     take?: number;

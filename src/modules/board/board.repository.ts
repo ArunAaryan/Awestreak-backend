@@ -13,7 +13,7 @@ export class BoardRepository {
       where: boardWhereUniqueInput,
       include: {
         Streak: {
-          orderBy:{
+          orderBy: {
             current_streak: 'desc',
           },
           include: {
@@ -32,7 +32,7 @@ export class BoardRepository {
     orderBy?: Prisma.BoardOrderByWithRelationInput;
     joinStreak?: boolean;
     userId?: string;
-  }): Promise<Board[]> {
+  }): Promise<Prisma.BoardGetPayload<{ include: { Streak: true } }>[]> {
     const {
       skip,
       take,
