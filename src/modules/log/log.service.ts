@@ -19,4 +19,18 @@ export class LogService {
     return await this.boardService.updateStreak(data.streakId, boardId);
     // Other methods that use the logRepository
   }
+  // TODO : complete this
+  async getLogs(streakId: string) {
+    const logs = await this.logRepository.findMany({
+      where: {
+        streak: {
+          id: streakId,
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
+    return logs;
+  }
 }

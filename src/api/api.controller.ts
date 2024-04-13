@@ -136,4 +136,8 @@ export class ApiController {
   ): Promise<string> {
     return this.streakService.updateStreakJob(data);
   }
+  @Get(`logs/:streakId`)
+  async getLogs(@Param('streakId') streakId) {
+    return this.logService.getLogs(streakId);
+  }
 }

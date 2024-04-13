@@ -28,4 +28,20 @@ export class LogRepository {
   async delete(id: string): Promise<Log> {
     return await this.prisma.log.delete({ where: { id } });
   }
+  async findMany(params: {
+    skip?: number;
+    take?: number;
+    cursor?: Prisma.LogWhereUniqueInput;
+    where?: Prisma.LogWhereInput;
+    orderBy?: Prisma.LogOrderByWithRelationInput;
+  }) {
+    const { skip, take, cursor, where, orderBy } = params;
+    return await this.prisma.log.findMany({
+      skip,
+      take,
+      cursor,
+      where,
+      orderBy,
+    });
+  }
 }
