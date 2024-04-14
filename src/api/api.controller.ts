@@ -9,10 +9,10 @@ import {
   Put,
   Query,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Board, Log } from '@prisma/client';
 import { Request } from 'express';
-import { CreateBoardDto } from 'src/modules/board/board.dto';
 import { BoardService } from 'src/modules/board/board.service';
 import { CreateLogDto } from 'src/modules/log/log.dto';
 import { LogService } from 'src/modules/log/log.service';
