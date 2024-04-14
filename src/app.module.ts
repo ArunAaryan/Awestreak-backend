@@ -7,6 +7,11 @@ import { BoardModule } from './modules/board/board.module';
 import { LogModule } from './modules/log/log.module';
 import { GoogleStrategy } from './auth/strategies/google.strategy';
 import { ConfigModule } from '@nestjs/config';
+import { AuthController } from './auth/auth.controller';
+import { AuthModule } from './auth/auth.module';
+import { JwtStrategy } from './auth/strategies/jwt.strategy';
+import { UserRepository } from './modules/user/user.repository';
+import { PrismaService } from './modules/prisma/prisma.service';
 
 @Module({
   imports: [
@@ -14,9 +19,10 @@ import { ConfigModule } from '@nestjs/config';
     ApiModule,
     BoardModule,
     LogModule,
+    AuthModule,
     ConfigModule.forRoot(),
   ],
-  controllers: [AppController],
-  providers: [AppService, GoogleStrategy],
+  controllers: [AppController, AuthController],
+  providers: [AppService, GoogleStrategy, JwtStrategy],
 })
 export class AppModule {}

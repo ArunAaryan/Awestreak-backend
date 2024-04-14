@@ -13,6 +13,8 @@ import {
 } from '@nestjs/common';
 import { Board, Log } from '@prisma/client';
 import { Request } from 'express';
+import { GoogleOAuthGuard } from 'src/auth/guards/google.oauth.guard';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { BoardService } from 'src/modules/board/board.service';
 import { CreateLogDto } from 'src/modules/log/log.dto';
 import { LogService } from 'src/modules/log/log.service';
@@ -20,6 +22,7 @@ import { StreakService } from 'src/modules/streak/streak.service';
 import { UserService } from 'src/modules/user/user.service';
 
 @Controller()
+@UseGuards(JwtAuthGuard)
 export class ApiController {
   constructor(
     private readonly userService: UserService,
@@ -29,10 +32,11 @@ export class ApiController {
   ) {}
 
   @Post(`user`)
-  async createUser(@Body() data: { name: string }) {
-    const { name } = data;
+  async createUser(@Body() data: { name: string; email: string }) {
+    const { name, email } = data;
     return this.userService.createUser({
       name,
+      email,
     });
   }
 
@@ -62,8 +66,9 @@ export class ApiController {
     @Query('joinStreak') joinStreak?: string,
     @Req() req?: Request,
   ) {
-    const userId = req.headers.authorization;
-    const params = { joinStreak: joinStreak === 'true', userId };
+    const { id } = req.user;
+    console.log(req.user, 'userId in boards');
+    const params = { joinStreak: joinStreak === 'true', id };
     return this.boardService.getBoards(params);
   }
 

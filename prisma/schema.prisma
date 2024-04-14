@@ -16,6 +16,7 @@ model User {
   Streak      Streak[]
   name        String
   Board       Board[]
+  email       String  @default("user@awestreak.com")
 }
 
 model Streak {

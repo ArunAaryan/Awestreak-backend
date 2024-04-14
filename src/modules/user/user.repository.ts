@@ -14,6 +14,14 @@ export class UserRepository {
     });
   }
 
+  async userByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+  }
+
   async users(params: {
     skip?: number;
     take?: number;
