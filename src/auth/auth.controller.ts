@@ -32,7 +32,7 @@ export class AuthController {
       secure: false,
     });
     // res.send({ token });
-    res.redirect('http://localhost:5173?access_token=' + token);
+    res.redirect(`${process.env.CLIENT_URL}?access_token=` + token);
     // return res.send({ token });
     // return res.status(HttpStatus.OK);
   }
