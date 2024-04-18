@@ -9,6 +9,8 @@ import {
 // import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { GoogleOAuthGuard } from './guards/google.oauth.guard';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtService } from '@nestjs/jwt';
 
 @Controller('auth')
 export class AuthController {
@@ -24,12 +26,20 @@ export class AuthController {
   async googleAuthCallback(@Req() req, @Res() res) {
     const token = await this.authService.signIn(req.user);
 
-    // res.cookie('access_token', token, {
-    //   maxAge: 2592000000,
-    //   sameSite: true,
-    //   secure: false,
-    // });
-    return res.send({ token });
-    return res.status(HttpStatus.OK);
+    res.cookie('access_token', token, {
+      maxAge: 2592000000,
+      sameSite: true,
+      secure: false,
+    });
+    // res.send({ token });
+    res.redirect('http://localhost:5173?access_token=' + token);
+    // return res.send({ token });
+    // return res.status(HttpStatus.OK);
+  }
+
+  @Get('user')
+  @UseGuards(JwtAuthGuard)
+  async user(@Req() req) {
+    return req.user;
   }
 }

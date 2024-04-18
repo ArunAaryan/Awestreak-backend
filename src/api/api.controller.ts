@@ -9,6 +9,7 @@ import {
   Put,
   Query,
   Req,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { Board, Log } from '@prisma/client';
@@ -66,9 +67,8 @@ export class ApiController {
     @Query('joinStreak') joinStreak?: string,
     @Req() req?: Request,
   ) {
-    const { id } = req.user;
-    console.log(req.user, 'userId in boards');
-    const params = { joinStreak: joinStreak === 'true', id };
+    const user = req.user as any;
+    const params = { joinStreak: joinStreak === 'true', userId: user.id };
     return this.boardService.getBoards(params);
   }
 
@@ -78,8 +78,9 @@ export class ApiController {
   }
   @Post(`boards/:id/join`)
   async joinBoard(@Param('id') id, @Req() req?: Request) {
-    const userId = req.headers.authorization;
-    const params = { userId: userId, boardId: id };
+    const user = req.user as any;
+    console.log(user, 'user');
+    const params = { userId: user.id, boardId: id };
     const streakRes = await this.boardService.joinBoard(params);
     return await this.boardService.getBoard(id);
   }
@@ -90,28 +91,37 @@ export class ApiController {
     @Param('id') id,
     @Req() req?: Request,
   ) {
-    const userId = req.headers.authorization;
+    // const userId = req.headers.authorization;
+    const user = req.user as any;
     const { name, description, image } = data;
+    const res = await this.boardService.getBoard(id);
+    if (!res.userId === user.id) {
+      return UnauthorizedException;
+    }
     return this.boardService.updateBoard({
       id,
       name,
       description,
       image,
-      userId,
+      userId: user.id,
     });
   }
 
   @Delete(`boards/:id/join`)
   async leaveBoard(@Param('id') id, @Req() req?: Request) {
-    const userId = req.headers.authorization;
-    const streakRes = await this.boardService.leaveBoard(userId, id);
+    const user = req.user as any;
+    const streakRes = await this.boardService.leaveBoard(user.id, id);
     return await this.boardService.getBoard(id);
   }
 
   @Delete(`boards/:id`)
   async deleteBoard(@Param('id') id, @Req() req?: Request) {
-    const userId = req.headers.authorization;
-    const deleteBoardRes = await this.boardService.deleteBoard(userId, id);
+    const user = req.user as any;
+    const res = await this.boardService.getBoard(id);
+    if (!res.userId === user.id) {
+      return UnauthorizedException;
+    }
+    const deleteBoardRes = await this.boardService.deleteBoard(user.id, id);
     return deleteBoardRes;
   }
 
