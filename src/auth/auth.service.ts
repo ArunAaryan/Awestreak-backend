@@ -50,7 +50,7 @@ export class AuthService {
     try {
       const newUser = await this.userRepository.createUser(user);
       return this.generateJwt({
-        userId: newUser.id,
+        id: newUser.id,
         email: newUser.email,
       });
     } catch (e) {
