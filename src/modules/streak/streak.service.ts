@@ -21,7 +21,6 @@ export class StreakService {
       },
       joinStreak: true,
     });
-    console.log('boardsWithStreak', boardsWithStreak.length);
     for (let i = 0; i < boardsWithStreak.length; i++) {
       await this.prisma.$transaction(async (prisma) => {
         const { Streak, frequency } = boardsWithStreak[i];
@@ -35,7 +34,6 @@ export class StreakService {
               where: { id: streak.id },
               data: streak,
             });
-            console.log(streakRes);
           });
         }
       });
@@ -90,7 +88,7 @@ export class StreakService {
               where: { id: streak.id },
               data: streak_,
             });
-            console.log(streakRes, 'streakRes');
+            // console.log(streakRes, 'streakRes');
           }
         });
         break;

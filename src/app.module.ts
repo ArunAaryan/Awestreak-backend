@@ -13,6 +13,8 @@ import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { UserRepository } from './modules/user/user.repository';
 import { PrismaService } from './modules/prisma/prisma.service';
 import { EventsGateway } from './events/events.gateway';
+import { StreakController } from './modules/streak/streak.controller';
+import { StreakModule } from './modules/streak/streak.module';
 
 @Module({
   imports: [
@@ -22,8 +24,9 @@ import { EventsGateway } from './events/events.gateway';
     LogModule,
     AuthModule,
     ConfigModule.forRoot(),
+    StreakModule,
   ],
-  controllers: [AppController, AuthController],
+  controllers: [AppController, AuthController, StreakController],
   providers: [AppService, GoogleStrategy, JwtStrategy, EventsGateway],
 })
 export class AppModule {}

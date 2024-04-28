@@ -143,12 +143,12 @@ export class ApiController {
     return this.logService.createLog(boardId, createLogDto);
   }
 
-  @Post(`logs/updateStreak`)
-  async updateSteakJob(
-    @Body() data: { type: 'MONTHLY' | 'WEEKLY' | 'EVERYDAY' },
-  ): Promise<string> {
-    return this.streakService.updateStreakJob(data);
-  }
+  // @Post(`logs/updateStreak`)
+  // async updateSteakJob(
+  //   @Body() data: { type: 'MONTHLY' | 'WEEKLY' | 'EVERYDAY' },
+  // ): Promise<string> {
+  //   return this.streakService.updateStreakJob(data);
+  // }
   @Get(`logs/:streakId`)
   async getLogs(@Param('streakId') streakId) {
     return this.logService.getLogs(streakId);

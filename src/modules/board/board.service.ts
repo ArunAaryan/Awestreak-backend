@@ -38,6 +38,9 @@ export class BoardService {
       joinStreak,
       userId,
       where,
+      orderBy: {
+        created_at: 'desc',
+      },
     });
     return boards;
   }
