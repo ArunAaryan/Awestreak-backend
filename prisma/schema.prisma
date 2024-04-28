@@ -45,7 +45,7 @@ model Board {
   updated_at  DateTime @default(now())
   Streak      Streak[]
   image       String?
-  User        User?    @relation(fields: [userId], references: [id])
+  User        User?    @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   userId      String?
   period      Period? 
   frequency   Int @default(0)

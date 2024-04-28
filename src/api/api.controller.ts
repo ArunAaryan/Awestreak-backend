@@ -46,7 +46,8 @@ export class ApiController {
 
   @Post(`boards`)
   async createBoard(@Body() createBoardDto, @Req() req?: Request) {
-    const userId = req.headers.authorization;
+    const user = req.user as any;
+    const userId = user.id;
     return this.boardService.createBoard({
       ...createBoardDto,
       userId,
@@ -93,7 +94,8 @@ export class ApiController {
     const user = req.user as any;
     const { name, description, image } = data;
     const res = await this.boardService.getBoard(id);
-    if (!res.userId === user.id) {
+    console.log(res, 'res');
+    if (!res || !res?.userId === user.id) {
       return UnauthorizedException;
     }
     return this.boardService.updateBoard({
