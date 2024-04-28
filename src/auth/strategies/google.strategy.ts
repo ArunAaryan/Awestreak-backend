@@ -5,7 +5,6 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor() {
-    console.log(process.env.GOOGLE_CLIENT_ID, 'google client id');
     super({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,

@@ -12,6 +12,7 @@ import { AuthModule } from './auth/auth.module';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
 import { UserRepository } from './modules/user/user.repository';
 import { PrismaService } from './modules/prisma/prisma.service';
+import { EventsGateway } from './events/events.gateway';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { PrismaService } from './modules/prisma/prisma.service';
     ConfigModule.forRoot(),
   ],
   controllers: [AppController, AuthController],
-  providers: [AppService, GoogleStrategy, JwtStrategy],
+  providers: [AppService, GoogleStrategy, JwtStrategy, EventsGateway],
 })
 export class AppModule {}

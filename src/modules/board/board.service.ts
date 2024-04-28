@@ -3,16 +3,19 @@ import { Board, Streak, Prisma } from '@prisma/client';
 import { BoardRepository } from './board.repository';
 import { StreakRepository } from '../streak/streak.repository';
 import { CreateBoardDto } from './board.dto';
+import { EventsGateway } from '../../events/events.gateway';
 @Injectable()
 export class BoardService {
   constructor(
     private repository: BoardRepository,
     private streakRepository: StreakRepository,
+    private eventsGateway: EventsGateway,
   ) {}
   async createBoard(createBoardDto: CreateBoardDto) {
     const board = await this.repository.createBoard({
       ...createBoardDto,
     });
+    this.eventsGateway.io.emit('update', { type: 'boards' });
     return board;
   }
 
@@ -68,6 +71,8 @@ export class BoardService {
         id: id,
       },
     });
+    this.eventsGateway.io.emit('update', { type: 'board', id });
+    this.eventsGateway.io.emit('update', { type: 'boards' });
     return board;
   }
 
@@ -78,10 +83,17 @@ export class BoardService {
   }) {
     // may be should be moved to streak service
     const streak = await this.streakRepository.createStreak(params);
+
+    this.eventsGateway.io.emit('update', {
+      type: 'board',
+      id: streak.boardId,
+      info: 'A user Joined the board!',
+    });
     return streak;
   }
   async leaveBoard(userId: string, boardId: string) {
     const streak = await this.streakRepository.deleteStreak(userId, boardId);
+    this.eventsGateway.io.emit('update', { type: 'board', id: boardId });
     return streak;
   }
 
@@ -89,6 +101,7 @@ export class BoardService {
     const where = { id: boardId };
     // check if current user is the creator; then delete : TODO
     const deleteBoard = await this.repository.deleteBoard(where);
+    this.eventsGateway.io.emit('update', { type: 'boards' });
     return deleteBoard;
   }
   async updateStreak(id, boardId: string) {
@@ -104,6 +117,7 @@ export class BoardService {
       data: data_,
     });
     const updatedBoard = await this.repository.board({ id: boardId });
+    this.eventsGateway.io.emit('update', { type: 'board', id: boardId });
     return updatedBoard;
   }
   //write board/:id route here

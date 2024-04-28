@@ -78,7 +78,6 @@ export class ApiController {
   @Post(`boards/:id/join`)
   async joinBoard(@Param('id') id, @Req() req?: Request) {
     const user = req.user as any;
-    console.log(user, 'user');
     const params = { userId: user.id, boardId: id };
     const streakRes = await this.boardService.joinBoard(params);
     return await this.boardService.getBoard(id);
@@ -94,7 +93,6 @@ export class ApiController {
     const user = req.user as any;
     const { name, description, image } = data;
     const res = await this.boardService.getBoard(id);
-    console.log(res, 'res');
     if (!res || !res?.userId === user.id) {
       return UnauthorizedException;
     }
