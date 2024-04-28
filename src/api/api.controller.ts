@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseBoolPipe,
   Post,
   Put,
   Query,
@@ -12,15 +11,14 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
-import { Board, Log } from '@prisma/client';
+import { Board } from '@prisma/client';
 import { Request } from 'express';
-import { GoogleOAuthGuard } from 'src/auth/guards/google.oauth.guard';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { BoardService } from 'src/modules/board/board.service';
-import { CreateLogDto } from 'src/modules/log/log.dto';
-import { LogService } from 'src/modules/log/log.service';
-import { StreakService } from 'src/modules/streak/streak.service';
-import { UserService } from 'src/modules/user/user.service';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BoardService } from '../modules/board/board.service';
+import { CreateLogDto } from '../modules/log/log.dto';
+import { LogService } from '../modules/log/log.service';
+import { StreakService } from '../modules/streak/streak.service';
+import { UserService } from '../modules/user/user.service';
 
 @Controller()
 @UseGuards(JwtAuthGuard)

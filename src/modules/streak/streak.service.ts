@@ -2,8 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Streak, Prisma, PrismaClient } from '@prisma/client';
 import { StreakRepository } from './streak.repository';
 import { BoardRepository } from '../board/board.repository';
-import { getDaysDifference } from 'src/utils';
 import { PrismaService } from '../prisma/prisma.service';
+import { getDaysDifference } from '../../utils';
 @Injectable()
 export class StreakService {
   constructor(

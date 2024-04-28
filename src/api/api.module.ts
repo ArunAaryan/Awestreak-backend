@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { UserModule } from 'src/modules/user/user.module';
+import { BoardModule } from '../modules/board/board.module';
+import { LogModule } from '../modules/log/log.module';
+import { StreakModule } from '../modules/streak/streak.module';
+import { UserModule } from '../modules/user/user.module';
 import { ApiController } from './api.controller';
-import { BoardModule } from 'src/modules/board/board.module';
-import { LogModule } from 'src/modules/log/log.module';
-import { StreakModule } from 'src/modules/streak/streak.module';
-
 @Module({
   imports: [UserModule, BoardModule, LogModule, StreakModule],
   controllers: [ApiController],
