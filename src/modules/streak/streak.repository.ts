@@ -75,9 +75,12 @@ export class StreakRepository {
       include: {
         Log: {
           take: 1,
-          orderBy: {
-            created_at: 'desc',
-          },
+          // where: {
+          //   created_at: {
+          //     lte: new Date(new Date().setDate(new Date().getDate() - 1)),
+          //   },
+          // },
+          orderBy: { created_at: 'desc' },
         },
       },
     });

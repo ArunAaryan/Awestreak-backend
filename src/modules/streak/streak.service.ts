@@ -4,6 +4,7 @@ import { StreakRepository } from './streak.repository';
 import { BoardRepository } from '../board/board.repository';
 import { PrismaService } from '../prisma/prisma.service';
 import { getDaysDifference } from '../../utils';
+
 @Injectable()
 export class StreakService {
   constructor(
@@ -39,6 +40,7 @@ export class StreakService {
       });
     }
   }
+
   async updateStreakJob(data: { type: 'MONTHLY' | 'WEEKLY' | 'EVERYDAY' }) {
     const { type } = data;
     switch (type) {
@@ -52,54 +54,56 @@ export class StreakService {
             },
           },
         });
-        // const streaks = await this.repository.streakaWithLogs({});
-        await this.prisma.$transaction(async (prisma) => {
-          for (let i = 0; i < streaks.length; i++) {
-            let streak = streaks[i];
-            if (streaks[i].Log.length > 0) {
-              const log = streaks[i].Log;
-              if (getDaysDifference(log[0].created_at, new Date()) > 1) {
-                console.log(
-                  'found log with more than 1 days difference',
-                  log[0].created_at,
-                  new Date(),
-                );
-                if (streak.freezes > 0) {
-                  console.log('freezes are more', streak.freezes);
-                  streak.freezes -= 1;
-                } else {
-                  console.log('freezes', streak.freezes);
-                  streak.current_streak = 0;
-                }
-              }
-              // get baords first and their relation streaks and logs
-            } // remove else block and add a default log when a user joins a board.
-            else {
-              if (getDaysDifference(streak.updated_at, new Date()) > 1) {
-                console.log(
-                  'found streak with more than 1 days difference',
-                  getDaysDifference(streak.updated_at, new Date()),
-                );
+        let updatedStreakRecords = streaks.map((streak) => streak);
+        let result = [];
+        for (let i = 0; i < updatedStreakRecords.length; i++) {
+          let streak = updatedStreakRecords[i];
+          let modified = false;
+          if (streak.Log.length > 0) {
+            const log = streak.Log;
+            if (getDaysDifference(log[0].created_at, new Date()) > 1) {
+              console.log(
+                'found log with more than 1 days difference',
+                log[0].created_at,
+                new Date(),
+              );
+              modified = true;
+              if (streak.freezes > 0) {
+                console.log('freezes are more', streak.freezes);
+                streak.freezes -= 1;
+              } else {
+                console.log('freezes', streak.freezes);
                 streak.current_streak = 0;
               }
             }
-            const { Log, ...streak_ } = streak;
-            const streakRes = await this.prisma.streak.update({
-              where: { id: streak.id },
-              data: streak_,
-            });
-            // console.log(streakRes, 'streakRes');
           }
-        });
+          delete streak.Log;
+          if (modified) {
+            let res = await this.repository.updateStreak({
+              data: {
+                current_streak: streak.current_streak,
+                freezes: streak.freezes,
+                // updated_at: new Date(),
+              },
+              where: { id: streak.id },
+            });
+            result.push(res);
+            modified = false;
+          }
+        }
+        return result;
+
         break;
       case 'WEEKLY':
         this.weekOrMonthUpdate('WEEKLY');
+        return [];
         break;
       case 'MONTHLY':
         this.weekOrMonthUpdate('MONTHLY');
+        return [];
         break;
     } //switch
 
-    return 'Done';
+    return [];
   }
 }

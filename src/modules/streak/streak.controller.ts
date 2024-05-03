@@ -1,5 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { StreakService } from './streak.service';
+import { Streak } from '@prisma/client';
 
 @Controller('streak')
 export class StreakController {
@@ -8,8 +9,8 @@ export class StreakController {
   @Post(`logs/updateStreak`)
   async updateSteakJob(
     @Body() data: { type: 'MONTHLY' | 'WEEKLY' | 'EVERYDAY' },
-  ): Promise<string> {
+  ): Promise<Streak[]> {
     console.log(data);
-    return this.streakService.updateStreakJob(data);
+    return (await this.streakService.updateStreakJob(data)) as Streak[];
   }
 }
