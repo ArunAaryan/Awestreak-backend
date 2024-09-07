@@ -12,8 +12,12 @@ export class StreakController {
     return (await this.streakService.updateStreakJob()) as Streak[];
   }
 
-  @Get(`logs/resetStreak`)
-  async resetStreakJob(): Promise<string> {
-    return await this.streakService.resetStreakJob();
+  @Get(`logs/resetStreak/weekly`)
+  async resetStreakJobWeekly(): Promise<string> {
+    return await this.streakService.resetStreakJob('WEEKLY');
+  }
+  @Get(`logs/resetStreak/monthly`)
+  async resetStreakJobMonthly(): Promise<string> {
+    return await this.streakService.resetStreakJob('MONTHLY');
   }
 }

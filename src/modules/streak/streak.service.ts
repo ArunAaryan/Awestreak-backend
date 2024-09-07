@@ -14,11 +14,11 @@ export class StreakService {
   ) {}
 
   // reset the streak every week or month
-  async resetStreakJob() {
+  async resetStreakJob(type: string) {
     const boardsWithStreak = await this.boardRepository.boards({
       where: {
         period: {
-          in: ['MONTHLY', 'WEEKLY'],
+          equals: type as 'WEEKLY' | 'MONTHLY',
         },
       },
       joinStreak: true,
