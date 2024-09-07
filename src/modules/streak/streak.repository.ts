@@ -30,10 +30,18 @@ export class StreakRepository {
     });
   }
 
-  async createStreak(data: Prisma.StreakCreateInput): Promise<Streak> {
+  async createStreak(
+    data: Prisma.StreakCreateInput,
+  ): Promise<
+    Prisma.StreakGetPayload<{ include: { User: true; Board: true } }>
+  > {
     return this.prisma.streak.create({
       data: {
         ...data,
+      },
+      include: {
+        User: true,
+        Board: true,
       },
     });
   }

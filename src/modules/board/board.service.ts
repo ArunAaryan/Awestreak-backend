@@ -90,7 +90,7 @@ export class BoardService {
     this.eventsGateway.io.emit('update', {
       type: 'board',
       id: streak.boardId,
-      info: 'A user Joined the board!',
+      info: `${streak.User.name} Joined ${streak.Board.name}!`,
     });
     return streak;
   }
