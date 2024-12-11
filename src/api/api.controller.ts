@@ -153,4 +153,13 @@ export class ApiController {
   async getLogs(@Param('streakId') streakId) {
     return this.logService.getLogs(streakId);
   }
+
+  @Put(`users`)
+  async editUser(@Req() req: Request, @Body() data: { name: string }) {
+    const user = req.user as any;
+    return this.userService.editUser({
+      id: user.id,
+      name: data.name,
+    });
+  }
 }

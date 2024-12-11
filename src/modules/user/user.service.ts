@@ -12,7 +12,14 @@ export class UserService {
     });
     return user;
   }
-
+  async editUser(params: { id: User[`id`]; name: User[`name`] }) {
+    const { id, name } = params;
+    const user = await this.repository.updateUser({
+      where: { id },
+      data: { name },
+    });
+    return user;
+  }
   async getUsers() {
     const users = await this.repository.users({});
     return users;
