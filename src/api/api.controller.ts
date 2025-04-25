@@ -162,4 +162,9 @@ export class ApiController {
       name: data.name,
     });
   }
+
+  @Get(`users/:id`)
+  async getUser(@Param('id') id) {
+    return this.userService.getUser({ id });
+  }
 }

@@ -24,4 +24,10 @@ export class UserService {
     const users = await this.repository.users({});
     return users;
   }
+
+  async getUser(params: { id: User[`id`] }) {
+    const { id } = params;
+    const user = await this.repository.user({ id });
+    return user;
+  }
 }
