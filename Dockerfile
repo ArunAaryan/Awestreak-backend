@@ -17,13 +17,9 @@ RUN pnpm install --frozen-lockfile
 # Copy the rest of the application code
 COPY . .
 
-# Run Prisma commands
-RUN npx prisma migrate deploy --schema ./prisma/schema.prisma
-RUN npx prisma generate
-
 # Expose the port the app runs on
 EXPOSE 3000
 
 # Command to run the application
-CMD ["pnpm", "run", "start:prod"]
+CMD ["sh", "-c", "pnpm prisma generate && pnpm prisma migrate deploy --schema ./prisma/schema.prisma && pnpm run start:prod"]
 
