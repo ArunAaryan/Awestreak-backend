@@ -4,11 +4,9 @@ FROM node:18
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Install dependencies
-RUN npm install
+RUN corepack enable && corepack prepare pnpm@latest --activate
+COPY pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 
 
 # Copy the rest of the application code
@@ -21,4 +19,5 @@ RUN npx prisma generate
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npm", "run", "start:prod"]
+CMD ["pnpm", "run", "start:prod"]
+
