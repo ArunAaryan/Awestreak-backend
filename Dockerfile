@@ -4,17 +4,23 @@ FROM node:18
 # Set the working directory inside the container
 WORKDIR /app
 
+# Enable pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Copy dependency files first for better caching
+COPY package.json ./
 COPY pnpm-lock.yaml ./
+
+# Install dependencies
 RUN pnpm install --frozen-lockfile
 
-
 # Copy the rest of the application code
-copy ./prisma prisma
 COPY . .
 
+# Run Prisma commands
 RUN npx prisma migrate deploy --schema ./prisma/schema.prisma
 RUN npx prisma generate
+
 # Expose the port the app runs on
 EXPOSE 3000
 
