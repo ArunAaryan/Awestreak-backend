@@ -71,6 +71,16 @@ export class ApiController {
     return this.boardService.getBoards(params);
   }
 
+  @Get(`boards/private`)
+  getPrivateBoards(
+    @Query('joinStreak') joinStreak?: string,
+    @Req() req?: Request,
+  ) {
+    console.log('in controller');
+    const user = req.user as any;
+    return this.boardService.getPrivateBoards({ userId: user.id });
+  }
+
   @Get(`boards/:id`)
   getBoard(@Param('id') id) {
     return this.boardService.getBoard(id);
@@ -85,13 +95,18 @@ export class ApiController {
   @Put(`boards/:id`)
   async updateBoard(
     @Body()
-    data: { name: string; description: string; image?: string },
+    data: {
+      name: string;
+      description: string;
+      image?: string;
+      isPrivate?: boolean;
+    },
     @Param('id') id,
     @Req() req?: Request,
   ) {
     // const userId = req.headers.authorization;
     const user = req.user as any;
-    const { name, description, image } = data;
+    const { name, description, image, isPrivate } = data;
     const res = await this.boardService.getBoard(id);
     if (!res || !res?.userId === user.id) {
       return UnauthorizedException;
@@ -100,6 +115,7 @@ export class ApiController {
       id,
       name,
       description,
+      isPrivate,
       image,
       userId: user.id,
     });

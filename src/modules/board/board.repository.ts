@@ -42,11 +42,14 @@ export class BoardRepository {
       joinStreak,
       userId: uid,
     } = params;
+    if (where) {
+      where.isPrivate = { equals: false };
+    }
     return this.prisma.board.findMany({
       skip,
       take,
       cursor,
-      where,
+      where: where,
       orderBy,
       include: {
         Streak: joinStreak,
@@ -64,6 +67,7 @@ export class BoardRepository {
     where: Prisma.BoardWhereUniqueInput;
     data: Prisma.BoardUpdateInput;
   }): Promise<Board> {
+    console.log('data', params);
     const { where, data } = params;
     return this.prisma.board.update({
       data,
@@ -74,6 +78,13 @@ export class BoardRepository {
   async deleteBoard(where: Prisma.BoardWhereUniqueInput): Promise<Board> {
     return this.prisma.board.delete({
       where,
+    });
+  }
+
+  async getPrivateBoards(params: { userId: string }): Promise<Board[]> {
+    console.log('params', params);
+    return this.prisma.board.findMany({
+      where: { isPrivate: true, userId: params.userId },
     });
   }
 }

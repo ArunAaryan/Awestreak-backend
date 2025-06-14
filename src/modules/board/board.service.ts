@@ -21,7 +21,7 @@ export class BoardService {
 
   async getBoards(params?: { joinStreak?: boolean; userId?: string }) {
     const { joinStreak, userId } = params;
-    let where: Prisma.BoardWhereInput;
+    let where: Prisma.BoardWhereInput = {};
     if (userId) {
       where = {
         Streak: {
@@ -56,13 +56,15 @@ export class BoardService {
     description: Board[`description`];
     image?: Board[`image`];
     userId: Board[`userId`];
+    isPrivate?: Board[`isPrivate`];
   }) {
-    const { name, description, image, userId, id } = params;
+    const { name, description, image, userId, id, isPrivate } = params;
     const board = await this.repository.updateBoard({
       data: {
         name,
         description,
         image,
+        isPrivate: isPrivate,
         updated_at: new Date(),
         User: {
           connect: {
@@ -123,5 +125,9 @@ export class BoardService {
     this.eventsGateway.io.emit('update', { type: 'board', id: boardId });
     return updatedBoard;
   }
-  //write board/:id route here
+  async getPrivateBoards(params: { userId: string }) {
+    console.log('in service');
+    const boards = await this.repository.getPrivateBoards(params);
+    return boards;
+  }
 }

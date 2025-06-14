@@ -49,6 +49,7 @@ model Board {
   userId      String?
   period      Period? 
   frequency   Int @default(0)
+  isPrivate   Boolean  @default(false)
 }
 model Log {
   id          String    @id @unique @default(cuid())
