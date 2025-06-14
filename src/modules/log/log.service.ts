@@ -23,16 +23,25 @@ export class LogService {
     // Other methods that use the logRepository
   }
   // TODO : complete this
-  async getLogs(streakId: string) {
+  async getLogs(
+    streakId: string,
+    limit?: number,
+    from?: Date | string,
+    to?: Date | string,
+  ) {
+    const fromDate = from ? new Date(from) : undefined;
+    const toDate = to ? new Date(to) : undefined;
+
     const logs = await this.logRepository.findMany({
       where: {
-        streak: {
-          id: streakId,
-        },
+        streak: { id: streakId },
+        ...(fromDate && { created_at: { gte: fromDate } }),
+        ...(toDate && {
+          created_at: { ...(fromDate ? { gte: fromDate } : {}), lte: toDate },
+        }),
       },
-      orderBy: {
-        created_at: 'desc',
-      },
+      orderBy: { created_at: 'desc' },
+      ...(limit && { take: limit }),
     });
     return logs;
   }

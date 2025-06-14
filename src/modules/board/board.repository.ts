@@ -52,8 +52,13 @@ export class BoardRepository {
       where: where,
       orderBy,
       include: {
-        Streak: joinStreak,
+        Streak: {
+          take: 1,
+        },
       },
+      // include: {
+      //   Streak: joinStreak,
+      // },
     });
   }
 

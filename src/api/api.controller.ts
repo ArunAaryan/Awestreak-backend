@@ -165,9 +165,13 @@ export class ApiController {
   // ): Promise<string> {
   //   return this.streakService.updateStreakJob(data);
   // }
-  @Get(`logs/:streakId`)
-  async getLogs(@Param('streakId') streakId) {
-    return this.logService.getLogs(streakId);
+  @Post(`logs/:streakId`)
+  async getLogs(
+    @Param('streakId') streakId,
+    @Body() body: { limit?: number; from?: Date; to?: Date },
+  ) {
+    const { limit, from, to } = body;
+    return this.logService.getLogs(streakId, limit, from, to);
   }
 
   @Put(`users`)
