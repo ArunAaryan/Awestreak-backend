@@ -24,7 +24,7 @@ jobs:
       - name: Build and push BE image
         uses: docker/build-push-action@v5
         with:
-          context: ./Awestreak-Backend
-          file: ./Awestreak-Backend/Dockerfile
+          context: .
+          file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/awestreak-backend:latest
